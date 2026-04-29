@@ -94,7 +94,7 @@
       "id": 1,
       "name": "Bijay Bista",
       "role": "Founder & CEO",
-      "desc": "Visionary leader with 25+ years of experience driving growth and innovation across diverse industries.",
+      "desc": "Visionary leader with 25+ years of experience driving growth and innovation.",
       "fullDesc": "Bijay Bista founded the Bista Group with a vision to create a world-class diversified conglomerate. With over 25 years of leadership experience across manufacturing, trading, and consulting sectors, he has steered the group to become a trusted name in the region and beyond.",
       "img": "https://placehold.co/400x400/1a3a8f/ffffff?text=BB"
     },
@@ -103,7 +103,7 @@
       "name": "Priya Sharma",
       "role": "Managing Director",
       "desc": "Strategic operations expert who has overseen expansion into 50+ global markets.",
-      "fullDesc": "Priya Sharma brings over 18 years of operational expertise to the Bista Group. Her strategic vision has been instrumental in driving the group's expansion into more than 50 global markets, establishing strong partnerships and distribution networks across Asia, Europe, and the Americas.",
+      "fullDesc": "Priya Sharma brings over 18 years of operational expertise to the Bista Group. Her strategic vision has been instrumental in driving the group's expansion into more than 50 global markets.",
       "img": "https://placehold.co/400x400/c0152a/ffffff?text=PS"
     },
     {
@@ -111,7 +111,7 @@
       "name": "Rajan Thapa",
       "role": "Chief Financial Officer",
       "desc": "CPA with expertise in international finance, risk management, and sustainable investment.",
-      "fullDesc": "Rajan Thapa is a Certified Public Accountant with over 15 years of expertise in international finance and risk management. He oversees the group's financial operations, investment portfolio, and sustainable growth initiatives, ensuring robust fiscal discipline across all business units.",
+      "fullDesc": "Rajan Thapa is a Certified Public Accountant with over 15 years of expertise in international finance and risk management. He oversees the group's financial operations and investment portfolio.",
       "img": "https://placehold.co/400x400/1a3a8f/ffffff?text=RT"
     }
   ],
@@ -312,7 +312,11 @@
   "emailjs": {
     "pk": "",
     "sid": "",
-    "tid": ""
+    "tid": "",
+    "tidContact": "",
+    "tidPayment": "",
+    "contactSubject": "New Enquiry from {name}",
+    "contactEnabled": false
   },
   "cloudinary": {
     "cloud": "dyjzhbvkf",
@@ -323,10 +327,10 @@
     "usd": 0.0075
   },
   "theme": {
-    "primary": "#555658",
-    "secondary": "#c0152a",
-    "bg": "#082b96",
-    "accent": "#637aab"
+    "primary": "#242938",
+    "secondary": "#9e671a",
+    "bg": "#061646",
+    "accent": "#b6eb24"
   },
   "visibility": {
     "about": true,
@@ -347,7 +351,7 @@
     "contact": "Contact Us"
   },
   "design": {
-    "layout": "organic",
+    "layout": "bento",
     "heroAlign": "center",
     "navStyle": "floating",
     "cardStyle": "glass",
@@ -431,15 +435,6 @@
         "required": true,
         "enabled": true,
         "placeholder": "Your full name"
-      },
-      {
-        "id": 2,
-        "key": "phone",
-        "label": "Phone Number",
-        "type": "tel",
-        "required": false,
-        "enabled": true,
-        "placeholder": "+1 234 567 8900"
       }
     ]
   },
@@ -454,112 +449,112 @@
   "_orders": [
     {
       "id": "BG-1777462289005",
-      "status": "pending",
-      "total": 34880,
-      "gateway": "Contact Seller",
-      "deliveryCharge": 200,
+      "provider": "manual",
       "fulfillment": "delivery",
-      "fee": 680,
-      "subtotal": 34000,
-      "store": null,
-      "createdAt": "2026-04-29T11:31:29.005Z",
-      "items": [
-        {
-          "price": 8500,
-          "id": 2,
-          "qty": 4,
-          "name": "Executive Pen Set"
-        }
-      ],
       "customer": {
         "Email Address": "waytobijay@gmail.com",
+        "Address": "sdafda",
         "Phone Number": "0452450545",
-        "Full Name": "Bijay",
-        "Address": "sdafda"
+        "Full Name": "Bijay"
       },
-      "provider": "manual"
+      "gateway": "Contact Seller",
+      "fee": 680,
+      "subtotal": 34000,
+      "items": [
+        {
+          "qty": 4,
+          "price": 8500,
+          "name": "Executive Pen Set",
+          "id": 2
+        }
+      ],
+      "store": null,
+      "deliveryCharge": 200,
+      "status": "pending",
+      "createdAt": "2026-04-29T11:31:29.005Z",
+      "total": 34880
     },
     {
       "id": "BG-1777461550081",
-      "subtotal": 180000,
-      "fee": 3600,
-      "fulfillment": "delivery",
-      "deliveryCharge": 200,
-      "gateway": "Contact Seller",
-      "total": 183800,
-      "status": "pending",
-      "provider": "manual",
-      "customer": {
-        "Address": "dqd",
-        "Phone Number": "dqwd",
-        "Full Name": "wqdqd",
-        "Email Address": "qwdqw"
-      },
-      "items": [
-        {
-          "name": "Alpine Watch",
-          "qty": 4,
-          "id": 1,
-          "price": 45000
-        }
-      ],
-      "createdAt": "2026-04-29T11:19:10.081Z",
-      "store": null
-    },
-    {
-      "id": "BG-1777378810029",
       "items": [
         {
           "price": 45000,
+          "name": "Alpine Watch",
           "id": 1,
-          "qty": 1,
-          "name": "Alpine Watch"
+          "qty": 4
         }
       ],
-      "updatedAt": "2026-04-28T12:44:36.551Z",
+      "subtotal": 180000,
+      "total": 183800,
+      "status": "pending",
+      "createdAt": "2026-04-29T11:19:10.081Z",
+      "deliveryCharge": 200,
+      "store": null,
+      "fulfillment": "delivery",
       "provider": "manual",
+      "fee": 3600,
+      "gateway": "Contact Seller",
       "customer": {
-        "Address": "eqew",
-        "Email Address": "qwewq",
-        "Full Name": "qweq",
-        "Phone Number": "wqe"
-      },
+        "Address": "dqd",
+        "Full Name": "wqdqd",
+        "Phone Number": "dqwd",
+        "Email Address": "qwdqw"
+      }
+    },
+    {
+      "id": "BG-1777378810029",
+      "deliveryCharge": 200,
       "createdAt": "2026-04-28T12:20:10.029Z",
+      "status": "delivered",
+      "store": null,
+      "total": 46100,
+      "updatedAt": "2026-04-28T12:44:36.551Z",
+      "items": [
+        {
+          "qty": 1,
+          "price": 45000,
+          "name": "Alpine Watch",
+          "id": 1
+        }
+      ],
+      "subtotal": 45000,
+      "customer": {
+        "Phone Number": "wqe",
+        "Full Name": "qweq",
+        "Address": "eqew",
+        "Email Address": "qwewq"
+      },
+      "fee": 900,
+      "gateway": "Contact Seller",
+      "fulfillment": "delivery",
+      "provider": "manual",
       "statusHistory": [
         {
           "adminName": "Master Admin",
+          "status": "delivered",
           "comment": "",
-          "timestamp": "2026-04-28T12:44:36.551Z",
-          "status": "delivered"
+          "timestamp": "2026-04-28T12:44:36.551Z"
         }
-      ],
-      "store": null,
-      "deliveryCharge": 200,
-      "fulfillment": "delivery",
-      "fee": 900,
-      "subtotal": 45000,
-      "status": "delivered",
-      "total": 46100,
-      "gateway": "Contact Seller"
+      ]
     }
   ],
   "_enquiries": [
     {
       "id": "ENQ-1777456120422",
-      "createdAt": "2026-04-29T09:48:40.422Z",
-      "message": "wefewf",
       "subject": "wefwef",
       "name": "sfewrf",
-      "email": "wefwef"
+      "email": "wefwef",
+      "createdAt": "2026-04-29T09:48:40.422Z",
+      "message": "wefewf"
     },
     {
       "id": "ENQ-1777378826911",
-      "email": "qwewqe",
-      "name": "wqewqe",
-      "subject": "Order inquirywqeqw from qweq",
+      "createdAt": "2026-04-28T12:20:26.911Z",
       "message": "qweqe",
-      "createdAt": "2026-04-28T12:20:26.911Z"
+      "subject": "Order inquirywqeqw from qweq",
+      "name": "wqewqe",
+      "email": "qwewqe"
     }
   ],
-  "_exportedAt": "2026-04-29T11:43:57.714Z"
+  "_exportedAt": "2026-04-29T11:49:24.446Z"
 }
