@@ -447,7 +447,7 @@ table code { font-family:monospace; font-size:.8rem; background:#f1f5f9; padding
     </table>
     <div class="info-box" style="margin-top:.8rem;">
       <div class="ib-icon">📌</div>
-      <div class="ib-body"><strong>Important:</strong> When you make any content changes in the admin panel, those changes only go live after you click <strong>"⬇ Download data.json"</strong> (in the Theme tab) and commit that file to GitHub. Orders and enquiries save automatically — no download needed.</div>
+      <div class="ib-body"><strong>Important:</strong> Content changes (products, hero, contact, etc.) go live only after you click <strong>"⬇ Download data.json"</strong> and commit to GitHub. Orders and enquiries save automatically — no download needed.<br><br><strong>Design, Theme, Typography and Auth toggles</strong> are special — they are also saved to your browser's local storage. This means changes appear <em>immediately on the main site in the same browser</em> after a page refresh, even before you download data.json. Download data.json to publish to all visitors on all devices.</div>
     </div>
   </div>
 
@@ -1229,6 +1229,10 @@ table code { font-family:monospace; font-size:.8rem; background:#f1f5f9; padding
       <div class="ib-icon">✅</div>
       <div class="ib-body">The Sign In / Sign Up button and the Google Sign-In option are <strong>enabled by default</strong> — no admin setup required to see them on your website. Firebase Authentication is needed for sign-in to actually work.</div>
     </div>
+    <div class="info-box" style="margin-top:.8rem;">
+      <div class="ib-icon">⚡</div>
+      <div class="ib-body"><strong>Instant effect on the same device.</strong> When you toggle the Sign In button or Google Sign-In ON/OFF and click Save, the setting is also written to your browser's local storage. The <em>next time the main website loads in the same browser</em>, the change takes effect immediately — no need to download and replace <code>data.json</code> first. To publish the change to all visitors on all devices, still download and commit <code>data.json</code> as usual.</div>
+    </div>
   </div>
 
   <div class="card">
@@ -1386,6 +1390,10 @@ table code { font-family:monospace; font-size:.8rem; background:#f1f5f9; padding
     <div class="info-box" style="margin-top:.8rem;">
       <div class="ib-icon">💡</div>
       <div class="ib-body">Each layout has a <strong>visual preview thumbnail</strong> in the admin panel showing you exactly what the structure will look like before you apply it. Click the thumbnail to select, then click <strong>"Save All Design Settings"</strong>.</div>
+    </div>
+    <div class="success-box" style="margin-top:.8rem;">
+      <div class="ib-icon">🎨</div>
+      <div class="ib-body"><strong>Design changes apply everywhere — including Sign In modal and Profile panel.</strong> When you switch to Brutalist, the auth box gets hard white borders and sharp corners. Minimalism switches it to a white card with dark text. Organic gives it curved asymmetric corners. Immersive adds a subtle 3D tilt. Typography font settings also apply inside auth and profile panels automatically.</div>
     </div>
   </div>
 
@@ -1832,9 +1840,9 @@ table code { font-family:monospace; font-size:.8rem; background:#f1f5f9; padding
         <tr><td>Connect Firebase for shared orders</td><td>⚙ Configuration</td><td>Select Firebase → paste credentials → Save Backend Config</td></tr>
         <tr><td>Set up email notifications</td><td>⚙ Configuration</td><td>Enter EmailJS Public Key, Service ID, Template ID → Save EmailJS</td></tr>
         <tr><td>Update currency rates</td><td>⚙ Configuration</td><td>Enter new NPR→AUD and NPR→USD rates → Save Rates → Download data.json</td></tr>
-        <tr><td>Hide the Sign In button from visitors</td><td>⚙ Configuration → Auth</td><td>Toggle "Show Sign In / Sign Up Button" OFF → Save Auth Settings → Download data.json</td></tr>
+        <tr><td>Hide the Sign In button from visitors</td><td>⚙ Configuration → Auth</td><td>Toggle "Show Sign In / Sign Up Button" OFF → Save Auth Settings → reloads locally immediately; Download data.json to publish to all visitors</td></tr>
         <tr><td>Enable customer accounts (Sign In / Sign Up)</td><td>⚙ Configuration → Auth</td><td>Enable Firebase Auth in console → toggle is ON by default → Test Connection → Download data.json</td></tr>
-        <tr><td>Enable / disable Google Sign-In button</td><td>⚙ Configuration → Auth → Google Card</td><td>Toggle Google Sign-In ON or OFF → Save → Download data.json. Enable Google provider in Firebase Console</td></tr>
+        <tr><td>Enable / disable Google Sign-In button</td><td>⚙ Configuration → Auth → Google Card</td><td>Toggle Google Sign-In ON or OFF → Save → takes effect locally on next page load; Download data.json to publish. Enable Google provider in Firebase Console</td></tr>
         <tr><td>Test Google Sign-In is working</td><td>⚙ Configuration → Auth → Google Card</td><td>Click "⚡ Test Google Connection" — green result = Firebase Auth reachable</td></tr>
         <tr><td>Export all customer accounts to Excel</td><td>👤 Users → Customer Accounts</td><td>Click "⬇ Export Excel" — downloads customers_YYYY-MM-DD.csv</td></tr>
         <tr><td>Turn on email verification for new sign-ups</td><td>⚙ Configuration → Auth</td><td>Toggle Email Verification ON → Save Auth Config → Download data.json</td></tr>
@@ -1842,11 +1850,11 @@ table code { font-family:monospace; font-size:.8rem; background:#f1f5f9; padding
         <tr><td>Add a new field to the contact form</td><td>Contact → Form Fields</td><td>Click "+ Add New Field" → set label/key/type → Add Field → Save → Download data.json</td></tr>
         <tr><td>Make contact form phone field visible</td><td>Contact → Form Fields</td><td>Toggle Phone Number field ON → Save → Download data.json</td></tr>
         <tr><td>Make a contact form field mandatory</td><td>Contact → Form Fields</td><td>Check the "Mandatory" box on the field → Save → Download data.json</td></tr>
-        <tr><td>Change the website font</td><td>Design → Typography</td><td>Select Heading/Body font → adjust sliders → Save Typography → Download data.json</td></tr>
-        <tr><td>Change font size or line spacing</td><td>Design → Typography</td><td>Drag the Base Font Size / Line Height slider → Save Typography → Download data.json</td></tr>
-        <tr><td>Switch to Bento Grid or Brutalist layout</td><td>Design</td><td>Select layout thumbnail → Save All Design Settings → Download data.json</td></tr>
-        <tr><td>Change brand colours</td><td>Theme</td><td>Pick colours → Apply Theme → Download data.json</td></tr>
-        <tr><td>Change the navigation style</td><td>Design</td><td>Select option → Save All Design Settings → Download data.json</td></tr>
+        <tr><td>Change the website font</td><td>Design → Typography</td><td>Select Heading/Body font → adjust sliders → Save Typography → takes effect locally on next page load; Download data.json to publish</td></tr>
+        <tr><td>Change font size or line spacing</td><td>Design → Typography</td><td>Drag the Base Font Size / Line Height slider → Save Typography → takes effect locally on next page load; Download data.json to publish</td></tr>
+        <tr><td>Switch to Bento Grid or Brutalist layout</td><td>Design</td><td>Select layout thumbnail → Save All Design Settings → takes effect locally on next page load; Download data.json to publish</td></tr>
+        <tr><td>Change brand colours</td><td>Theme</td><td>Pick colours → Apply Theme → takes effect locally on next page load; Download data.json to publish</td></tr>
+        <tr><td>Change the navigation style</td><td>Design</td><td>Select option → Save All Design Settings → takes effect locally on next page load; Download data.json to publish</td></tr>
         <tr><td>Add a completely new section</td><td>Custom Sections</td><td>Fill section builder → Save → Download data.json</td></tr>
       </tbody>
     </table>

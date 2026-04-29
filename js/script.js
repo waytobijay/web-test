@@ -1797,6 +1797,25 @@ async function saveNewPassword() {
 }
 
 // ══════════ FALLBACK: load from static data.json ══════════
+// After loading data.json, we also check localStorage for admin overrides.
+// The admin panel writes auth/design/theme/typography to 'bista_config_override'
+// so changes take effect on the main site immediately (no need to re-download data.json).
+const LS_OVERRIDE_KEY = 'bista_config_override';
+
+function _applyLocalOverride() {
+  try {
+    const raw = localStorage.getItem(LS_OVERRIDE_KEY);
+    if (!raw) return;
+    const override = JSON.parse(raw);
+    if (override.auth       != null) state.auth       = { ...state.auth,       ...override.auth };
+    if (override.design     != null) state.design     = { ...state.design,     ...override.design };
+    if (override.theme      != null) state.theme      = { ...state.theme,      ...override.theme };
+    if (override.typography != null) state.typography = { ...state.typography, ...override.typography };
+  } catch(e) {
+    // Silently ignore malformed override
+  }
+}
+
 function loadFromJson() {
   fetch('./data.json')
     .then(r => r.ok ? r.json() : Promise.reject())
@@ -1831,8 +1850,13 @@ function loadFromJson() {
           }
         };
       }
+      // Apply any admin-panel overrides saved to localStorage
+      _applyLocalOverride();
     })
-    .catch(() => {})
+    .catch(() => {
+      // Even on fetch failure, apply any cached overrides
+      _applyLocalOverride();
+    })
     .finally(() => { renderAll(); initFadeIn(); initAuth(); });
 }
 

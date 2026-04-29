@@ -94,7 +94,7 @@ const DEFAULTS = {
       { id:5, key:'message', label:'Message',       type:'textarea', required:true,  enabled:true,  placeholder:'Tell us more...' }
     ]
   },
-  auth: { enabled:false, googleEnabled:false, emailVerification:false, allowGuest:true,
+  auth: { enabled:true, googleEnabled:true, emailVerification:false, allowGuest:true,
     signupFields:[ { id:1, key:'name', label:'Full Name', type:'text', required:true, enabled:true, placeholder:'Your full name' } ]
   },
   typography: { headingFont:'Segoe UI', bodyFont:'Segoe UI', baseFontSize:16, headingScale:2.5, lineHeight:1.7, letterSpacing:0 }
@@ -102,6 +102,25 @@ const DEFAULTS = {
 
 // ══════════ STORAGE ══════════
 function persist(k, v) { state[k] = v; }
+
+// ── LocalStorage override bridge ──
+// Writes key settings to localStorage so the main site picks them up immediately
+// without needing to download & replace data.json.
+const LS_OVERRIDE_KEY = 'bista_config_override';
+
+function _saveLocalOverride() {
+  try {
+    const override = {
+      auth:       state.auth       || {},
+      design:     state.design     || {},
+      theme:      state.theme      || {},
+      typography: state.typography || {}
+    };
+    localStorage.setItem(LS_OVERRIDE_KEY, JSON.stringify(override));
+  } catch(e) {
+    console.warn('[Admin] Could not save local override:', e.message);
+  }
+}
 
 // ══════════ STATE ══════════
 const state = {};
@@ -500,6 +519,7 @@ function saveRates() {
 function saveTheme() {
   state.theme = { primary:val('a-col-primary'), secondary:val('a-col-secondary'), bg:val('a-col-bg'), accent:val('a-col-accent') };
   applyAdminTheme();
+  _saveLocalOverride();
   toast('Theme saved! Download data.json to publish.');
 }
 
@@ -525,6 +545,7 @@ function saveDesign() {
   const navHide   = document.querySelector('input[name="a-nav-hide"]:checked')?.value   || 'always';
   const navHover  = document.querySelector('input[name="a-nav-hover"]:checked')?.value  || 'simple';
   state.design = { layout, heroAlign, navStyle, cardStyle, navHide, navHover };
+  _saveLocalOverride();
   toast('Design layout saved!');
 }
 
@@ -2364,7 +2385,8 @@ function saveAuthConfig() {
   state.auth.googleEnabled     = !!document.getElementById('auth-google-on')?.checked;
   state.auth.emailVerification = !!document.getElementById('auth-verify-on')?.checked;
   state.auth.allowGuest        = !!document.getElementById('auth-guest-on')?.checked;
-  toast('✅ Auth settings saved. Download data.json to publish.');
+  _saveLocalOverride();
+  toast('✅ Auth settings saved. Reload the main website to see changes.');
 }
 
 async function testGoogleAuthConnection() {
@@ -2558,7 +2580,8 @@ function saveTypography() {
   state.typography.headingScale  = parseFloat(document.getElementById('typo-heading-scale')?.value || 2.5);
   state.typography.lineHeight    = parseFloat(document.getElementById('typo-line-height')?.value || 1.7);
   state.typography.letterSpacing = parseFloat(document.getElementById('typo-letter-spacing')?.value || 0);
-  toast('Typography saved. Download data.json to publish.');
+  _saveLocalOverride();
+  toast('Typography saved. Reload the main website to see changes.');
 }
 
 // ══════════ INIT ══════════
