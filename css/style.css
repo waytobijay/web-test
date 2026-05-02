@@ -74,6 +74,8 @@ nav {
 }
 .mobile-menu.open { display:block; }
 .mobile-menu a { display:block; color:var(--text); text-decoration:none; padding:.75rem 0; border-bottom:1px solid var(--border); font-size:1rem; }
+/* Sign In link in mobile menu — highlighted */
+.mobile-menu #mob-signin-link { background:rgba(37,99,235,.12); border:1px solid rgba(37,99,235,.25); border-radius:10px; padding:.75rem 1rem; color:#93c5fd; margin-top:.5rem; }
 
 /* ════════════ BUTTONS ════════════ */
 .btn {
@@ -878,6 +880,11 @@ h1,h2,h3,h4 { font-family:var(--font-heading); letter-spacing:var(--letter-spaci
   font-size:.82rem; font-weight:600; cursor:pointer;
   transition:all .2s; white-space:nowrap; flex-shrink:0;
 }
+/* On very small screens hide the nav Sign In label text — icon stays visible */
+@media (max-width:380px) {
+  .user-auth-btn #user-auth-label { display:none; }
+  .user-auth-btn { padding:7px 10px; }
+}
 .user-auth-btn:hover { background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.25); }
 .user-auth-btn.signed-in { background:rgba(37,99,235,.15); border-color:rgba(37,99,235,.4); color:#93c5fd; }
 .user-auth-btn.signed-in:hover { background:rgba(37,99,235,.25); }
@@ -885,7 +892,8 @@ h1,h2,h3,h4 { font-family:var(--font-heading); letter-spacing:var(--letter-spaci
 /* ══════════ AUTH MODAL ══════════ */
 .auth-overlay {
   position:fixed; inset:0; z-index:3000;
-  background:rgba(0,0,0,.7); backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
   display:none; align-items:center; justify-content:center; padding:1rem;
 }
 .auth-overlay.open { display:flex; }

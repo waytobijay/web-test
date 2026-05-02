@@ -1308,12 +1308,14 @@ let _authCallback = null;      // Called after successful sign-in
 /* ── Init auth ── */
 async function initAuth() {
   const authCfg = state.auth || {};
-  const btn = document.getElementById('user-auth-btn');
+  const btn        = document.getElementById('user-auth-btn');
+  const mobSignIn  = document.getElementById('mob-signin-link');
 
   // auth.enabled controls Sign In button visibility (defaults to true).
-  // Admin can set enabled:false to fully hide it.
+  // Admin can set enabled:false to fully hide it everywhere.
   const showBtn = authCfg.enabled !== false; // true unless explicitly disabled
-  if (btn) btn.style.display = showBtn ? 'flex' : 'none';
+  if (btn)       btn.style.display      = showBtn ? 'flex'  : 'none';
+  if (mobSignIn) mobSignIn.style.display = showBtn ? 'block' : 'none';
   if (!showBtn) return;
 
   await _initFirebaseAuth();
@@ -1338,6 +1340,25 @@ async function _initFirebaseAuth() {
       _currentUser = user;
       _onAuthStateChange(user);
     });
+
+    // ── Handle redirect result from Google Sign-In (mobile redirect flow) ──
+    // After signInWithRedirect(), Google sends the user back to this page.
+    // getRedirectResult() resolves with the signed-in user on that return visit.
+    try {
+      const result = await _firebaseAuth.getRedirectResult();
+      if (result && result.user) {
+        // User just returned from Google OAuth redirect — close modal if open
+        closeAuthModal();
+        if (_authCallback) { _authCallback(); _authCallback = null; }
+        sessionStorage.removeItem('_bista_auth_redirect');
+      }
+    } catch(e) {
+      // auth/no-current-user is normal (not a redirect result) — ignore it
+      if (e.code && e.code !== 'auth/no-current-user') {
+        console.warn('[Auth] Redirect result error:', e.code, e.message);
+      }
+    }
+
     return true;
   } catch(e) {
     console.warn('[Auth] Firebase Auth init failed:', e.message);
@@ -1355,11 +1376,14 @@ function _loadAuthScript(src) {
 }
 
 async function _onAuthStateChange(user) {
-  const btn   = document.getElementById('user-auth-btn');
-  const label = document.getElementById('user-auth-label');
+  const btn        = document.getElementById('user-auth-btn');
+  const label      = document.getElementById('user-auth-label');
+  const mobLabel   = document.getElementById('mob-signin-label');
   if (user) {
     _currentUser = user;
-    if (label) label.textContent = (user.displayName||user.email||'Account').split(' ')[0];
+    const firstName = (user.displayName||user.email||'Account').split(' ')[0];
+    if (label)    label.textContent    = firstName;
+    if (mobLabel) mobLabel.textContent = '👤 ' + firstName;
     if (btn) btn.classList.add('signed-in');
     // Load favourites
     _userFavs = await DS.getUserFavourites(user.uid).catch(()=>[]);
@@ -1374,7 +1398,8 @@ async function _onAuthStateChange(user) {
   } else {
     _currentUser = null;
     _userFavs = [];
-    if (label) label.textContent = 'Sign In';
+    if (label)    label.textContent    = 'Sign In';
+    if (mobLabel) mobLabel.textContent = 'Sign In / My Account';
     if (btn) btn.classList.remove('signed-in');
     renderProducts();
   }
@@ -1482,7 +1507,7 @@ async function doSignIn() {
   if (!_firebaseAuth) {
     const ok = await _initFirebaseAuth();
     if (!ok) {
-      _authErr('⚙️ User accounts are not yet active. Go to Admin Panel → Configuration → Auth Configuration to enable them.');
+      _authErr('⚙️ Sign-in is not available yet — Firebase has not been configured for this site. Please contact the site owner.');
       return;
     }
   }
@@ -1500,7 +1525,8 @@ async function doSignIn() {
       'auth/invalid-email':     'That doesn\'t look like a valid email address.',
       'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
       'auth/invalid-credential':'Email or password is incorrect.',
-      'auth/network-request-failed': 'Network error. Check your internet connection.'
+      'auth/network-request-failed': 'Network error. Check your internet connection.',
+      'auth/unauthorized-domain': 'This domain is not authorised in Firebase. Add it under Firebase Console → Authentication → Settings → Authorised Domains.'
     };
     _authErr(msgs[e.code] || e.message);
     if (btn) { btn.textContent = 'Sign In'; btn.disabled = false; }
@@ -1519,7 +1545,7 @@ async function doSignUp() {
   if (!_firebaseAuth) {
     const ok = await _initFirebaseAuth();
     if (!ok) {
-      _authErr('⚙️ User accounts are not yet active. Go to Admin Panel → Configuration → Auth Configuration to enable them.');
+      _authErr('⚙️ Sign-in is not available yet — Firebase has not been configured for this site. Please contact the site owner.');
       return;
     }
   }
@@ -1558,24 +1584,55 @@ async function doSignUp() {
   }
 }
 
+// Detect mobile/tablet so we can use redirect instead of popup
+function _isMobileBrowser() {
+  return /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
 async function doGoogleSignIn() {
   // Lazy-init Firebase Auth if not ready yet
   if (!_firebaseAuth) {
     const ok = await _initFirebaseAuth();
     if (!ok) {
-      _authErr('⚙️ User accounts are not yet active. Go to Admin Panel → Configuration → Auth Configuration to enable them.');
+      // Check whether Firebase simply isn't configured yet vs. admin disabled auth
+      const cfg = (typeof DS !== 'undefined') ? DS.getConfig() : null;
+      if (!cfg || !cfg.firebase || !cfg.firebase.apiKey) {
+        _authErr('⚙️ Firebase is not configured yet. The site owner needs to connect a Firebase project in the Admin Panel → Configuration → Data Storage Backend.');
+      } else {
+        _authErr('⚙️ Google Sign-In could not be initialised. Please refresh the page and try again.');
+      }
       return;
     }
   }
+
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
-    await _firebaseAuth.signInWithPopup(provider);
-    closeAuthModal();
-    if (_authCallback) { _authCallback(); _authCallback = null; }
+
+    if (_isMobileBrowser()) {
+      // ── Mobile: use redirect flow ──
+      // Popups are blocked by default on iOS Safari, Firefox iOS, Chrome iOS.
+      // Redirect sends user to Google, they sign in, then Google redirects back.
+      // getRedirectResult() in _initFirebaseAuth() handles the return.
+      sessionStorage.setItem('_bista_auth_redirect', '1');
+      await _firebaseAuth.signInWithRedirect(provider);
+      // Execution stops here — browser navigates away to Google
+    } else {
+      // ── Desktop: use popup flow ──
+      await _firebaseAuth.signInWithPopup(provider);
+      closeAuthModal();
+      if (_authCallback) { _authCallback(); _authCallback = null; }
+    }
   } catch(e) {
     if (e.code === 'auth/popup-blocked') {
-      _authErr('Popup was blocked by your browser. Please allow popups for this site and try again.');
-    } else if (e.code !== 'auth/popup-closed-by-user') {
+      // Desktop popup was blocked — fall back to redirect automatically
+      try {
+        const provider2 = new firebase.auth.GoogleAuthProvider();
+        sessionStorage.setItem('_bista_auth_redirect', '1');
+        await _firebaseAuth.signInWithRedirect(provider2);
+      } catch(e2) { _authErr(e2.message); }
+    } else if (e.code === 'auth/unauthorized-domain') {
+      _authErr('This domain is not authorised in Firebase. Add it under Firebase Console → Authentication → Settings → Authorised Domains.');
+    } else if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
       _authErr(e.message);
     }
   }
