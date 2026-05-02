@@ -1331,9 +1331,11 @@ async function _initFirebaseAuth() {
   try {
     if (typeof firebase === 'undefined') return false; // Firebase SDK not loaded
 
-    // Load Auth compat SDK if needed
+    // Load Auth compat SDK if needed — use jsDelivr, NOT gstatic.com
+    // gstatic.com is blocked by Firefox Focus and other privacy browsers.
+    // jsDelivr mirrors the Firebase npm package and is not on any tracker block list.
     if (!firebase.auth) {
-      await _loadAuthScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js');
+      await _loadAuthScript('https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-auth-compat.js');
     }
     _firebaseAuth = firebase.auth();
     _firebaseAuth.onAuthStateChanged(user => {
@@ -1507,7 +1509,15 @@ async function doSignIn() {
   if (!_firebaseAuth) {
     const ok = await _initFirebaseAuth();
     if (!ok) {
-      _authErr('⚙️ Sign-in is not available yet — Firebase has not been configured for this site. Please contact the site owner.');
+      const cfg = (typeof DS !== 'undefined') ? DS.getConfig() : null;
+      if (typeof firebase === 'undefined') {
+        _authErr('⚠️ Sign-in scripts were blocked by your browser\'s content filter. ' +
+          'Try disabling content blocking for this site, or use a different browser.');
+      } else if (!cfg || !cfg.firebase || !cfg.firebase.apiKey) {
+        _authErr('⚙️ Sign-in is not available yet — Firebase has not been configured for this site. Please contact the site owner.');
+      } else {
+        _authErr('⚙️ Sign-in could not be initialised. Please refresh the page and try again.');
+      }
       return;
     }
   }
@@ -1594,10 +1604,13 @@ async function doGoogleSignIn() {
   if (!_firebaseAuth) {
     const ok = await _initFirebaseAuth();
     if (!ok) {
-      // Check whether Firebase simply isn't configured yet vs. admin disabled auth
       const cfg = (typeof DS !== 'undefined') ? DS.getConfig() : null;
       if (!cfg || !cfg.firebase || !cfg.firebase.apiKey) {
         _authErr('⚙️ Firebase is not configured yet. The site owner needs to connect a Firebase project in the Admin Panel → Configuration → Data Storage Backend.');
+      } else if (typeof firebase === 'undefined') {
+        // Firebase SDK failed to load — most likely blocked by a content/ad blocker
+        _authErr('⚠️ Sign-in scripts were blocked by your browser\'s content filter. ' +
+          'Try disabling content blocking for this site, or use a different browser.');
       } else {
         _authErr('⚙️ Google Sign-In could not be initialised. Please refresh the page and try again.');
       }

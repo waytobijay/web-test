@@ -31,9 +31,13 @@ const DS = (() => {
     if (!cfg || !cfg.apiKey || !cfg.projectId) return false;
     try {
       if (typeof firebase === 'undefined') {
-        await _loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
-        await _loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js');
-        await _loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js');
+        // Load Firebase from jsDelivr (npm mirror) — not blocked by Firefox Focus/Safari content blockers.
+        // gstatic.com (Google's CDN) is blocked by Firefox Focus & some privacy browsers.
+        // jsDelivr already serves EmailJS on this site and is confirmed unblocked.
+        const JSDLVR = 'https://cdn.jsdelivr.net/npm/firebase@9.23.0';
+        await _loadScript(`${JSDLVR}/firebase-app-compat.js`);
+        await _loadScript(`${JSDLVR}/firebase-firestore-compat.js`);
+        await _loadScript(`${JSDLVR}/firebase-auth-compat.js`);
       }
       // Delete existing app if projectId OR apiKey changed
       if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
@@ -77,7 +81,14 @@ const DS = (() => {
     return new Promise((res, rej) => {
       if (document.querySelector(`script[src="${src}"]`)) { res(); return; }
       const s = document.createElement('script');
-      s.src = src; s.onload = res; s.onerror = () => rej(new Error('Failed to load: ' + src));
+      s.src = src;
+      s.onload = res;
+      s.onerror = () => {
+        console.error(`[DS] Script blocked or failed to load: ${src}\n` +
+          `If you see this in Firefox Focus / Brave / Safari with content blocking ON, ` +
+          `the CDN domain may be on a block list. Check browser content blocking settings.`);
+        rej(new Error('Script blocked/failed: ' + src));
+      };
       document.head.appendChild(s);
     });
   }

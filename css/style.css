@@ -94,7 +94,12 @@ nav {
 section { padding:90px 5%; scroll-margin-top:70px; }
 .section-tag { color:#6db3ff; font-size:.8rem; letter-spacing:.15em; text-transform:uppercase; margin-bottom:.8rem; }
 .section-title { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:700; margin-bottom:1rem; }
-.section-title span { background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; }
+.section-title span {
+  background:var(--grad); -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  /* Repeat gradient per-line when text wraps (prevents bottom lines going invisible) */
+  -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
 .section-sub { color:var(--text-muted); max-width:580px; line-height:1.7; margin-bottom:3rem; }
 .divider { width:60px; height:3px; background:var(--grad); border-radius:2px; margin:1rem 0 2rem; }
 
@@ -122,7 +127,14 @@ section { padding:90px 5%; scroll-margin-top:70px; }
   font-size:clamp(2.2rem,6vw,4.5rem); font-weight:800; line-height:1.1;
   margin-bottom:1.2rem; animation:fadeUp .8s .15s ease both;
 }
-.hero-title span { background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; }
+.hero-title span {
+  background:var(--grad); -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  /* Repeat gradient per-line — prevents wrapped company names from going dark/invisible */
+  -webkit-box-decoration-break:clone; box-decoration-break:clone;
+  /* Keep company name together on one line when it fits */
+  display:inline; white-space:nowrap;
+}
 .hero-sub {
   color:var(--text-muted); font-size:1.1rem; max-width:550px;
   margin:0 auto 2.5rem; line-height:1.7; animation:fadeUp .8s .3s ease both;
